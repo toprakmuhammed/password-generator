@@ -49,6 +49,21 @@ function makePassword() {
   );
 
   passwordInput.value = newPassword;
+  updateStrengthMeter(newPassword);
+}
+
+function updateStrengthMeter(password) {
+  const passwordLength = password.length;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumbers = /[0-9]/.test(password);
+  const hasSymbols = /[!@#$%^&*()-_=+[\]{}|;:,.<>?]/.test(password);
+
+  let strengthScore = 0;
+
+  // here the .min will get the minimum value
+  // but this will make sure that "at maximum" you would get 40
+  strengthScore += Math.min(passwordLength * 2, 40);
 }
 
 function createRandomPassword(
