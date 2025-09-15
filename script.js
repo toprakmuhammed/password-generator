@@ -8,8 +8,8 @@ const numbersCheckbox = document.getElementById("numbers");
 const symbolsCheckbox = document.getElementById("symbols");
 const generateButton = document.getElementById("generate-btn");
 const copyButton = document.getElementById("copy-btn");
-const strengthBar = document.getElementById(".strength-bar");
-const strengthText = document.getElementById(".strength-container p");
+const strengthBar = document.querySelector(".strength-bar");
+const strengthText = document.querySelector(".strength-container p");
 const strengthLabel = document.getElementById("strength-label");
 
 // Character sets
@@ -64,6 +64,40 @@ function updateStrengthMeter(password) {
   // here the .min will get the minimum value
   // but this will make sure that "at maximum" you would get 40
   strengthScore += Math.min(passwordLength * 2, 40);
+
+  if (hasUppercase) strengthScore += 15;
+  if (hasLowercase) strengthScore += 15;
+  if (hasNumbers) strengthScore += 15;
+  if (hasSymbols) strengthScore += 15;
+
+  //enforce minimum score for every short password
+  if (passwordLength < 8) {
+    strengthScore = Math.min(strengthScore, 40);
+  }
+
+  //ensure the width of the strength bar is a valid percentage
+  const safeScore = Math.max(5, Math.min(100, strengthScore));
+  strengthBar.style.width = safeScore + "%";
+
+  let strengthLabelText = "";
+  let barColor = "";
+
+  if (strengthScore < 40) {
+    //Weak password
+    barColor = "#fc8181";
+    strengthLabelText = "Weak";
+  } else if (strengthScore < 70) {
+    //Medium password
+    barColor = "#fbd38d";
+    strengthLabelText = "Medium";
+  } else {
+    //Strong password
+    barColor = "#68d391";
+    strengthLabelText = "Strong";
+  }
+
+  strengthBar.style.backgroundColor = barColor;
+  strengthLabel.textContent = strengthLabelText;
 }
 
 function createRandomPassword(
@@ -88,3 +122,5 @@ function createRandomPassword(
   }
   return password;
 }
+
+window.addEventListener("DOMContentLoaded", makePassword);
